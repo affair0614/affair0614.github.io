@@ -60,7 +60,7 @@ export const publications = [
 
 export const education = [
   { period: "2020 — 2025", institution: { en: "McGill University", zh: "麦吉尔大学" }, degree: { en: "PhD, Mechanical Engineering", zh: "机械工程博士（硕博连读）" }, note: { en: "Dissertation: Machine Learning-Aided Design of Auxetic Metamaterials", zh: "博士课题：机器学习辅助的负泊松比超材料设计" } },
-  { period: "2016 — 2020", institution: { en: "Southeast University", zh: "东南大学" }, degree: { en: "BEng, Energy and Power Engineering", zh: "能源与动力工程学士" }, note: { en: "GPA 3.85/4.0 · Rank 4/130 · China National Scholarship", zh: "GPA 3.85/4.0 · 专业排名 4/130 · 国家奖学金" } },
+  { period: "2016 — 2020", institution: { en: "Southeast University", zh: "东南大学" }, degree: { en: "BEng, Energy and Power Engineering", zh: "能源与动力工程学士" }, note: { en: "Engineering fundamentals, design, and computation", zh: "工程基础、设计与计算" } },
 ];
 
 export const experience = [
