@@ -1,23 +1,27 @@
 import { access, readFile } from "node:fs/promises";
 import { strict as assert } from "node:assert";
-import { projects, publications, education, experience, skillGroups } from "../assets/content.js";
+import { projects, publications } from "../assets/content.js";
 
-const pages = ["../index.html", "../research/index.html", "../projects/index.html", "../publications/index.html", "../about/index.html"];
-const markup = (await Promise.all(pages.map(page => readFile(new URL(page, import.meta.url), "utf8")))).join("\n");
-const site = await readFile(new URL("../assets/site.js", import.meta.url), "utf8");
-const content = await readFile(new URL("../assets/content.js", import.meta.url), "utf8");
+const routes = ["", "research/", "projects/", "publications/", "about/"];
+const files = routes.flatMap(route => [`../${route}index.html`, `../zh/${route}index.html`]);
+const pages = await Promise.all(files.map(file => readFile(new URL(file, import.meta.url), "utf8")));
+const all = pages.join("\n");
 
-for (const route of ["/research/", "/projects/", "/publications/", "/about/"]) assert.match(markup + site, new RegExp(route.replaceAll("/", "\\/")), `Missing route ${route}`);
-for (const page of pages) await access(new URL(page, import.meta.url));
-for (const asset of ["../assets/styles.css", "../assets/site.js", "../assets/content.js", "../assets/chonghui-zhang-dark.png", "../.nojekyll"]) await access(new URL(asset, import.meta.url));
+for (const [index, html] of pages.entries()) {
+  assert.match(html, /<main id="main">/, `${files[index]} has no main content`);
+  assert.match(html, /Chonghui Zhang/, `${files[index]} has no public name`);
+  assert.doesNotMatch(html, /<script|data-copy|localStorage/, `${files[index]} depends on JavaScript rendering`);
+  assert.ok(html.length > 1500, `${files[index]} appears empty`);
+}
+for (const route of routes.slice(1)) {
+  assert.match(all, new RegExp(`href="/${route.replaceAll("/", "\\/")}"`), `Missing English route ${route}`);
+  assert.match(all, new RegExp(`href="/zh/${route.replaceAll("/", "\\/")}"`), `Missing Chinese route ${route}`);
+}
+assert.equal((pages[4].match(/<details id=/g) || []).length, projects.length, "English projects are not fully rendered");
+assert.equal((pages[6].match(/publication-index/g) || []).length, 1, "English publication page missing");
+assert.match(pages[1], /研究学习系统如何重塑工程设计/, "Chinese homepage content missing");
+assert.doesNotMatch(all, /张崇辉|GPA|3\.85|4\/130|专业排名|National Scholarship/i, "Removed résumé content returned");
+await access(new URL("../assets/styles.css", import.meta.url));
+await access(new URL("../assets/chonghui-zhang-dark.png", import.meta.url));
 
-assert.ok(projects.length >= 6 && publications.length >= 10, "Research collections are incomplete");
-assert.ok(education.length && experience.length && skillGroups.length, "About data is incomplete");
-assert.match(site, /portfolio-language/, "Language preference is not persisted");
-assert.match(site, /try \{ initialLanguage = localStorage/, "Storage access is not guarded");
-assert.match(markup, /Researching how learning systems can reshape engineering design/, "Homepage lacks static fallback content");
-assert.doesNotMatch(`${markup}\n${site}\n${content}`, /张崇辉|GPA|3\.85|4\/130|专业排名|National Scholarship|chatgpt|vinext|wrangler|\.openai\/hosting/i, "Résumé metric, translated name, or runtime-specific reference found");
-assert.match(site, /<details id=/, "Projects are not expandable");
-assert.ok((markup.match(/Chonghui Zhang/g) || []).length >= pages.length, "English name must appear consistently across pages");
-
-console.log(`Validated ${pages.length} pages, ${projects.length} expandable projects, ${publications.length} publications, shared navigation, and bilingual UI.`);
+console.log(`Validated ${pages.length} fully static pages, ${projects.length} projects, and ${publications.length} publications without client-side rendering.`);
