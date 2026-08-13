@@ -11,6 +11,8 @@ a { color:inherit; text-decoration:none; } button { font:inherit; }
 .brand { display:flex; align-items:baseline; gap:13px; width:max-content; }.brand strong { font-size:14px; letter-spacing:.02em; }.brand span { color:var(--muted); font-size:10px; text-transform:uppercase; letter-spacing:.14em; }
 nav { display:flex; gap:32px; font-size:13px; } nav a { padding:29px 0 26px; border-bottom:2px solid transparent; } nav a:hover,nav a[aria-current="page"] { color:var(--blue); border-color:var(--blue); }
 .language-switch { justify-self:end; display:flex; gap:7px; align-items:center; color:#627083; font-size:12px; }.language-switch button { border:0; background:none; color:#627083; padding:8px 2px; cursor:pointer; }.language-switch button.active { color:var(--ink); font-weight:800; }
+.language-link { justify-self:end; color:var(--muted); font-size:12px; padding:10px 0; }
+.language-link:hover { color:var(--blue); }
 .home-hero { min-height:calc(100vh - 78px); display:grid; grid-template-columns:minmax(0,1.4fr) minmax(300px,.6fr); gap:8vw; align-items:center; padding-top:70px; padding-bottom:70px; }
 .eyebrow,.kicker { margin:0; color:var(--mint); font:700 10px/1.2 ui-monospace,monospace; letter-spacing:.17em; text-transform:uppercase; }
 .home-hero h1 { margin:30px 0 12px; color:var(--blue); font-size:clamp(16px,1.4vw,22px); letter-spacing:.08em; text-transform:uppercase; }.home-hero h2 { max-width:940px; margin:0; font-size:clamp(44px,6vw,88px); line-height:1.02; letter-spacing:-.055em; font-weight:560; }
