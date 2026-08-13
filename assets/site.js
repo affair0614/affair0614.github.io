@@ -55,7 +55,12 @@ function render(language) {
   const timeline = (selector, items, orgKey, detailKey) => { const node = document.querySelector(selector); if (node) node.innerHTML = items.map(item => `<article class="timeline"><span>${escapeHtml(item.period)}</span><div><h3>${escapeHtml(local(item[orgKey], language))}</h3><p>${escapeHtml(local(item[detailKey], language))}</p><small>${escapeHtml(local(item.note, language))}</small></div></article>`).join(""); };
   timeline("[data-education-list]", education, "institution", "degree"); timeline("[data-experience-list]", experience, "organization", "role");
   const skills = document.querySelector("[data-skills-list]"); if (skills) skills.innerHTML = skillGroups.map(group => `<div><span>${escapeHtml(local(group.label, language))}</span><p>${group.items.map(escapeHtml).join(" · ")}</p></div>`).join("");
-  document.querySelectorAll("[data-language]").forEach(button => button.addEventListener("click", () => { localStorage.setItem("portfolio-language", button.dataset.language); render(button.dataset.language); }));
+  document.querySelectorAll("[data-language]").forEach(button => button.addEventListener("click", () => {
+    try { localStorage.setItem("portfolio-language", button.dataset.language); } catch {}
+    render(button.dataset.language);
+  }));
 }
 
-render(localStorage.getItem("portfolio-language") === "zh" ? "zh" : "en");
+let initialLanguage = "en";
+try { initialLanguage = localStorage.getItem("portfolio-language") === "zh" ? "zh" : "en"; } catch {}
+render(initialLanguage);
