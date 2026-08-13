@@ -14,6 +14,8 @@ for (const asset of ["../assets/styles.css", "../assets/site.js", "../assets/con
 assert.ok(projects.length >= 6 && publications.length >= 10, "Research collections are incomplete");
 assert.ok(education.length && experience.length && skillGroups.length, "About data is incomplete");
 assert.match(site, /portfolio-language/, "Language preference is not persisted");
+assert.match(site, /try \{ initialLanguage = localStorage/, "Storage access is not guarded");
+assert.match(markup, /Researching how learning systems can reshape engineering design/, "Homepage lacks static fallback content");
 assert.doesNotMatch(`${markup}\n${site}\n${content}`, /张崇辉|GPA|3\.85|4\/130|专业排名|National Scholarship|chatgpt|vinext|wrangler|\.openai\/hosting/i, "Résumé metric, translated name, or runtime-specific reference found");
 assert.match(site, /<details id=/, "Projects are not expandable");
 assert.ok((markup.match(/Chonghui Zhang/g) || []).length >= pages.length, "English name must appear consistently across pages");
